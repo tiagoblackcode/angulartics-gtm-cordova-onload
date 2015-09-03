@@ -119,6 +119,42 @@ angular.module("seeruk.angulartics.google.tagmanager.cordova", [
                 }
             });
 
+            $analyticsProvider.registerTimingTrack(function(timingVar, properties) {
+                var username = googleTagManagerCordovaProvider.username;
+
+                if (username) {
+                    analytics.trackTiming(
+                        success, failure, properties.category, timingVar,
+                        properties.label, properties.value, username
+                    );
+                } else {
+                    analytics.trackTiming(
+                        success, failure, properties.category, timingVar,
+                        properties.label, properties.value
+                    );
+                }
+            });
+
+            $analyticsProvider.registerExceptionTrack(function(description, properties) {
+                var username = googleTagManagerCordovaProvider.username;
+
+                if (properties.fatal === undefined) {
+                    properties.fatal = true;
+                }
+
+                if (username) {
+                    analytics.trackException(
+                        success, failure, description,
+                        properties.fatal, username
+                    );
+                } else {
+                    analytics.trackException(
+                        success, failure, description,
+                        properties.fatal
+                    );
+                }
+            });
+
             // Track the page we're on when the module loads
             analytics.trackPage(success, failure, window.location.hash.slice(1));
         });
